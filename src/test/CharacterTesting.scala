@@ -1,17 +1,55 @@
 import org.scalatest.funsuite.AnyFunSuite
 
 class CharacterTesting  extends AnyFunSuite {
-  test ( "testing damage taken"){
-    val test1: Character = new Character("TheOnlyEmy")
-    test1.TakingDamage(50)
-    assert(test1 .currentHP < test1.maxHP)
+  test ( "testing takeDamage method"){
+    val p1: Character = new Character("p1")
+    val damageDealt: Int = 200
+    p1.takeDamage(damageDealt, "AD")
+    assert( p1.currentHP == p1.maxHP - damageDealt + p1.Armor)
   }
 
-  test("testing attack"){
+  test("Testing non-lethal damage"){
+    val p1: Character = new Character("p1")
+    val damageDealt: Int = 500
+    p1.takeDamage(damageDealt, "AP")
+    assert(!p1.isDead)
+  }
+
+  test("Testing lethal damage"){
+    val p1: Character = new Character("p1")
+    val damageDealt: Int = 600
+    p1.takeDamage(damageDealt, "AD")
+    assert(p1.isDead)
+  }
+
+  test("Testing player attacks"){
     val p1: Character = new Character("p1")
     val p2: Character = new Character("p2")
 
-    p1.attack(p2)
-    assert (p2.currentHP < 500)
+    p1.attackAD(p2)
+    assert(p2.currentHP == p2.maxHP - p1.AD + p2.Armor)
+    p2.attackAP(p1)
+    assert(p1.currentHP == p1.maxHP - p2.AP + p1.MR)
+
+  }
+
+  test("Testing mana reduction"){
+    val p1: Character = new Character("p1")
+    val p2: Character = new Character("p2")
+
+    p1.attackAP(p2)
+    assert(p1.currentMana == p1.maxMana - (p1.AP / 2.5))
+    p1.attackAP(p2)
+    assert(p1.currentMana == p1.maxMana - 2 * (p1.AP / 2.5))
+  }
+
+  test("Testing AP attack without any mana"){
+    val p1: Character = new Character("p1")
+    val p2: Character = new Character("p2")
+
+    p1.AP = 260
+    p1.attackAP(p2)
+
+    assert(p2.currentHP == p2.maxHP)
   }
 }
