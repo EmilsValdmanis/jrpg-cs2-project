@@ -2,50 +2,48 @@ class Character(var nickname: String) {
   var characterName: String = this.nickname
   var isDead : Boolean = false
 
-  var maxHP: Int = 500
+  val maxHP: Int = 500
   var currentHP: Int = this.maxHP
 
-  var maxMana: Int = 200
+  val maxMana: Int = 100
   var currentMana: Int = this.maxMana
 
-  var AD: Int = 50
+  var AD: Int = 100 // AKA AttackDamage
   var Armor: Int = 10
 
-  var AP: Int = 50
-  var magicResist: Int = 10
+  var AP: Int = 50 // AKA AbilityPower
+  var MR: Int = 5 // AKA Magic Resistance
 
-  def attack(opponent: Character): Unit ={
-    opponent.TakingDamage(this.AD)
+  def attackAD(opponent: Character): Unit ={
+    opponent.takeDamage(this.AD, "AD")
   }
 
-  def TakingDamage(damageTaken: Int): Unit = {
-    var Dodged: Boolean = false
-    val random = scala.util.Random
-    val randomInt : Int = random.nextInt(101)
-    val dodgeChance: Int = ( this.Armor * 100 ) / damageTaken
-//    println("Random = " + randomInt, "Chance = " + dodgeChance)
-    if (dodgeChance > 100) {
-      Dodged = true
-    }else if (dodgeChance < 100 && dodgeChance >= 0){
-      if (randomInt > dodgeChance){
-        Dodged = false
-      }else {
-        Dodged = true
-      }
+  def attackAP(opponent: Character): Unit ={
+    val manaReduced: Int = (this.AP / 2.5).toInt
+    this.currentMana -= manaReduced
+    if ( this.currentMana >= 0 ){
+      opponent.takeDamage(this.AP, "AP")
+    }else{
+      this.currentMana += manaReduced
+      println(this.nickname + " does not have enough mana for this attack, mana needed = " + manaReduced)
     }
+  }
 
-    if (Dodged == true){
-      println(this.characterName + " dodged the attack")
-      this.currentHP = this.currentHP
-    }else if (Dodged == false){
-      println(this.characterName + " did not dodge the attack")
-      val damageMitigated: Double = 1 - this.Armor.toDouble/damageTaken
-//      println("mitigated % " + damageMitigated)
-      val actualTaken: Double  = damageMitigated * damageTaken
-//      println("actual " + actualTaken)
-      this.currentHP -= actualTaken.toInt
-      println(this.characterName + " took " + actualTaken + " damage, now has " + this.currentHP + " (" + (damageTaken - actualTaken) + " mitigated)")
+  def takeDamage(incomingDamage: Int, dmgType: String): Unit = {
+    var damageMitigated: Int = 0
+    if (dmgType == "AD"){
+      damageMitigated = this.Armor
+    }else if (dmgType == "AP"){
+      damageMitigated = this.MR
     }
+    val damageTaken: Int  = incomingDamage - damageMitigated
+    this.currentHP -= damageTaken
+
+    if (currentHP < 0){
+      currentHP = 0
+      isDead = true
+    }
+    println(this.characterName + " took " + damageTaken + " " + dmgType + " damage, now has " + this.currentHP + " (" + damageMitigated + " mitigated)")
   }
 }
 
