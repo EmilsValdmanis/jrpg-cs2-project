@@ -1,24 +1,27 @@
-class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 100, var AD: Int = 50,var Armor: Int = 10,var AP: Int = 50,var MR: Int = 10,var xpGained: Int = 0,var level: Int = 1 ) {
+class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 100, var AD: Int = 50,var Armor: Int = 10,var AP: Int = 50,var MR: Int = 10,var xpGained: Int = 0,var level: Int = 1,var currentXp:Int = 0) {
   var characterName: String = this.nickname
   var isDead : Boolean = false
   var overMax: Int = 0
+
 
   var currentHP: Int = this.maxHP
   var currentMana: Int = this.maxMana
 
   def gainXP(amount: Int): Unit ={
     this.xpGained += amount
+    this.currentXp += amount
+    this.tryLevel()
   }
   def defeatEnemy(enemy: Character): Unit ={
     this.gainXP(enemy.level * 20)
   }
 
   def tryLevel(): Unit ={
-    if (this.xpGained == this.level * this.level * 20 ){
+    if (this.currentXp == this.level * this.level * 20 ){
       this.levelUp()
-    }else if (this.xpGained > this.level * this.level * 20 ){
+    }else if (this.currentXp > this.level * this.level * 20 ){
       do{
-        overMax = this.xpGained - this.level * this.level * 20
+        overMax = this.currentXp - this.level * this.level * 20
         this.levelUp(overMax)
       }while (overMax >= this.level * this.level * 20)
     }else{
@@ -28,7 +31,7 @@ class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 1
 
 
   def levelUp(overMax: Int = 0): Unit ={
-    this.xpGained = 0 + overMax
+    this.currentXp = 0 + overMax
     this.level += 1
 
 
@@ -79,6 +82,6 @@ class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 1
   }
 
   override def toString: String ={
-    "|" + this.nickname + " LVL-" + this.level + "| XP:" + this.xpGained + "/" + (this.level * this.level * 20) +  "| HP: " + this.currentHP + "/" + this.maxHP + "| Mana: " + this.currentMana + "/" + this.maxMana + "| AD/AP: " + this.AD + "/" + this.AP + "| Armor/MR: " + this.Armor + "/" + this.MR + "|"
+    "|" + this.nickname + " LVL-" + this.level + "| XP:" + this.currentXp + "/" + (this.level * this.level * 20) +  "| HP: " + this.currentHP + "/" + this.maxHP + "| Mana: " + this.currentMana + "/" + this.maxMana + "| AD/AP: " + this.AD + "/" + this.AP + "| Armor/MR: " + this.Armor + "/" + this.MR + "|"
   }
 }

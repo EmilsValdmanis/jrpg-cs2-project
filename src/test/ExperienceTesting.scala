@@ -21,7 +21,7 @@ class ExperienceTesting extends AnyFunSuite {
     p1.gainXP(amount)
     p1.tryLevel()
     assert(p1.level == 4)
-    assert(p1.xpGained == amount - 280)
+    assert(p1.currentXp == amount - 280)
   }
   test ("Testing defeat Enemy functionality"){
     val p1 : Character = new Character("p1")
