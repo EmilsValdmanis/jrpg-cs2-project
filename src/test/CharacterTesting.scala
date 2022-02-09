@@ -1,5 +1,6 @@
 import org.scalatest.funsuite.AnyFunSuite
 
+
 class CharacterTesting  extends AnyFunSuite {
   test ( "testing takeDamage method"){
     val p1: Character = new Character("p1")
@@ -51,5 +52,18 @@ class CharacterTesting  extends AnyFunSuite {
     p1.attackAP(p2)
 
     assert(p2.currentHP == p2.maxHP)
+  }
+  test("testing assassin"){
+    val a1: Assassin = new Assassin("a1")
+    val t1: Tank = new Tank("t1")
+    a1.gainXP(10000)
+    println(a1.toString)
+    println(t1.toString)
+
+    a1.pierce(t1)
+
+    println("-----------")
+    println(a1.toString)
+    println(t1.toString)
   }
 }

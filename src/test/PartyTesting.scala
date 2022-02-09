@@ -23,5 +23,9 @@ class PartyTesting extends AnyFunSuite {
     assert(d2.xpGained == (20*7/3))
     assert(d3.xpGained == (20*7/3))
     assert(d4.xpGained == (20*7/3))
+    assert(d1.level == 1)
+    assert(d2.level == 2)
+    assert(d3.level == 2)
+    assert(d4.level == 2)
   }
 }

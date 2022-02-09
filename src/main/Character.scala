@@ -1,4 +1,15 @@
-class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 100, var AD: Int = 50,var Armor: Int = 10,var AP: Int = 50,var MR: Int = 10,var xpGained: Int = 0,var level: Int = 1,var currentXp:Int = 0) {
+class Character(var nickname: String) {
+
+  var maxHP: Int = 500
+  var maxMana: Int = 100
+  var AD: Int = 50
+  var Armor: Int = 10
+  var AP: Int = 50
+  var MR: Int = 10
+  var xpGained: Int = 0
+  var level: Int = 1
+  var currentXp:Int = 0
+
   var characterName: String = this.nickname
   var isDead : Boolean = false
   var overMax: Int = 0
@@ -25,7 +36,7 @@ class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 1
         this.levelUp(overMax)
       }while (overMax >= this.level * this.level * 20)
     }else{
-      println(this.characterName + " does not have enough XP to level up")
+//      println(this.characterName + " does not have enough XP to level up")
     }
   }
 
@@ -43,10 +54,8 @@ class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 1
 
     this.AD += 10
     this.AP += 10
-    this.Armor += 5
-    this.MR += 5
-
-    println(this.characterName + " leveled to LVL-" + this.level )
+    this.Armor += 7
+    this.MR += 7
   }
 
   def attackAD(opponent: Character): Unit ={
@@ -60,7 +69,7 @@ class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 1
       opponent.takeDamage(this.AP, "AP")
     }else{
       this.currentMana += manaReduced
-      println(this.nickname + " does not have enough mana for this attack, mana needed = " + manaReduced)
+//      println(this.nickname + " does not have enough mana for this attack, mana needed = " + manaReduced)
     }
   }
 
@@ -74,14 +83,14 @@ class Character(var nickname: String, var maxHP: Int = 500, var maxMana: Int = 1
     val damageTaken: Int  = incomingDamage - damageMitigated
     this.currentHP -= damageTaken
 
-    if (currentHP < 0){
+    if (this.currentHP < 0){
       currentHP = 0
       isDead = true
     }
-    println(this.characterName + " took " + damageTaken + " " + dmgType + " damage, now has " + this.currentHP + " (" + damageMitigated + " mitigated)")
+//    println(this.characterName + " took " + damageTaken + " " + dmgType + " damage, now has " + this.currentHP + " (" + damageMitigated + " mitigated)")
   }
 
   override def toString: String ={
-    "|" + this.nickname + " LVL-" + this.level + "| XP:" + this.currentXp + "/" + (this.level * this.level * 20) +  "| HP: " + this.currentHP + "/" + this.maxHP + "| Mana: " + this.currentMana + "/" + this.maxMana + "| AD/AP: " + this.AD + "/" + this.AP + "| Armor/MR: " + this.Armor + "/" + this.MR + "|"
+    "|" + this.nickname + " LVL-" + this.level + "| XP:" + this.currentXp + "/" + (this.level * this.level * 20) +  "| HP: " + this.currentHP + "/" + this.maxHP + "| Mana: " + this.currentMana + "/" + this.maxMana + "| AD/AP: " + this.AD + "/" + this.AP + "| Armor/MR: " + this.Armor + "/" + this.MR + "|" + "Dead: " + this.isDead
   }
 }
