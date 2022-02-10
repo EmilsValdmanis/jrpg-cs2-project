@@ -31,6 +31,9 @@ class Assassin(nickname: String) extends Character(nickname){
     if (this.Armor < 0){
       this.Armor = 0
     }
+    if (opponent.currentHP <= 0){
+      opponent.isDead = true
+    }
   }
 
   def deathMark(opponent: Character): Unit = {
@@ -63,6 +66,9 @@ class Assassin(nickname: String) extends Character(nickname){
         this.AD -= 2
         this.currentHP -= this.level * 10
       }
+      if (opponent.currentHP <= 0){
+        opponent.isDead = true
+      }
     }
   }
   def battleOptions(): List[String] = {
@@ -72,6 +78,21 @@ class Assassin(nickname: String) extends Character(nickname){
       List("pierce", "deathMark")
     }else{
       List("pierce")
+    }
+  }
+
+  def takeAction(action: String, character: Character): Unit ={
+    val options = this.battleOptions()
+    for (possible <- options){
+      if (action == possible){
+        if (action == "pierce"){
+          this.pierce(character)
+        }else if (action == "deathMark"){
+          this.deathMark(character)
+        }else if (action == "critHit"){
+          this.critHit(character)
+        }
+      }
     }
   }
 }
