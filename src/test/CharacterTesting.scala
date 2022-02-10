@@ -53,17 +53,61 @@ class CharacterTesting  extends AnyFunSuite {
 
     assert(p2.currentHP == p2.maxHP)
   }
-  test("testing assassin"){
+  test("testing assassin class"){
     val a1: Assassin = new Assassin("a1")
     val t1: Tank = new Tank("t1")
-    a1.gainXP(10000)
-    println(a1.toString)
-    println(t1.toString)
 
-    a1.pierce(t1)
+    assert(a1.AD == 75 && a1.AD != t1.AD)
+    assert(a1.Armor == 15 && a1.MR == 15)
+    assert(a1.maxMana == 0)
+    assert(a1.battleOptions() == List("pierce"))
 
-    println("-----------")
-    println(a1.toString)
-    println(t1.toString)
+    a1.gainXP(280)
+    assert(a1.level == 4 && a1.maxHP == 760 && a1.AD == 120)
+
+    a1.gainXP(100000)
+    assert(a1.battleOptions() == List("pierce", "deathMark", "critHit"))
+
+    a1.takeAction("pierce", t1)
+    assert(t1.currentHP != 1000 && t1.currentHP == (t1.maxHP - a1.AD))
+    t1.currentHP = 1000
+
+    a1.takeAction("deathMark", t1)
+    assert(t1.currentHP != 1000 && t1.currentHP == t1.maxHP - a1.AD + t1.Armor)
+    t1.currentHP = 1000
+
+    a1.takeAction("critHit", t1)
+    assert(t1.currentHP != 1000 && t1.currentHP == t1.maxHP - a1.AD * 2) // this may fail because the ability has a chance to miss (20%)
+  }
+
+  test("testing tank class"){
+    val a1: Assassin = new Assassin("a1")
+    val t1: Tank = new Tank("t1")
+
+    assert(t1.maxHP == 1000 && t1.maxHP != a1.maxHP)
+    assert(t1.maxMana == 100)
+    assert(t1.Armor == 30 && t1.MR == 30)
+    assert(t1.battleOptions() == List("smash"))
+
+    t1.gainXP(280)
+    assert(t1.level == 4 && t1.maxHP == 1900 && t1.AD == 50 && t1.AP == 50)
+
+    t1.gainXP(100000)
+    assert(t1.battleOptions() == List("smash", "feast", "deathSentence"))
+
+    t1.takeAction("smash", a1)
+    assert(a1.currentHP != a1.maxHP && a1.currentHP == 270)
+    a1.currentHP = a1.maxHP
+
+    t1.currentHP = 1000
+    t1.takeAction("feast", t1)
+    assert(t1.currentHP == 1000 + t1.level * 30)
+    assert(t1.Armor == 271 && t1.MR == 271 && t1.AP == 150)
+
+    t1.currentHP = t1.maxHP
+    t1.takeAction("deathSentence", a1)
+    assert(a1.currentHP == a1.maxHP - 2 * (t1.AP - a1.MR) - a1.MR )
+    assert(t1.currentMana != t1.maxMana)
+    assert(t1.currentHP == t1.maxHP - 40)
   }
 }
